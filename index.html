@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>REST Demo</title>
+</head>
+<body>
+
+<h2>Messaggi</h2>
+
+<input type="text" id="txt">
+<button onclick="invia()">Invia</button>
+
+<ul id="lista"></ul>
+
+<script>
+
+function carica() {
+    fetch("api.php/messaggi")
+    .then(r => r.json())
+    .then(dati => {
+        let html = "";
+        dati.forEach(m => {
+            html += "<li>" + m.testo + "</li>";
+        });
+        document.getElementById("lista").innerHTML = html;
+    });
+}
+
+function invia() {
+    let testo = document.getElementById("txt").value;
+
+    fetch("api.php/messaggi", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({testo: testo})
+    })
+    .then(() => {
+        document.getElementById("txt").value = "";
+        carica();
+    });
+}
+
+carica();
+
+</script>
+
+</body>
+</html>
